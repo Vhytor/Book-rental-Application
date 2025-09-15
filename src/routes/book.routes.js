@@ -17,7 +17,7 @@ router.delete("/:id", deleteBook);
 
 //protected -> only logged-in users can modify
 router.post("/",authMiddleWare,createBook);
-router.put("/:id",authMiddleWare,updateBook);
-router.delete("/:id",authMiddleWare,deleteBook);
+router.put("/:id",authMiddleWare,requiredRole("admin"),updateBook);
+router.delete("/:id",authMiddleWare,requiredRole("admin"),deleteBook);
 
 export default router;
