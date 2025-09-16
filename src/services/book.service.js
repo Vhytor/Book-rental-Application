@@ -2,26 +2,32 @@ import { createBookRepo, getBooksRepo, getBookByIdRepo, updateBookRepo, deleteBo
 
 
 
-export const createBookService = async (data) => {
-    return await createBookRepo(data);
-};
+// export const createBookService = async (data) => {
+//     return await createBookRepo(data);
+// };
 
-export const getBooksService = async () => {
-    return await getBooksRepo();
-};
+// export const getBooksService = async () => {
+//     return await getBooksRepo();
+// };
 
-export const getBookByIdService = async (id) => {
-    return await getBookByIdRepo(id);
-};
+// export const getBookByIdService = async (id) => {
+//     return await getBookByIdRepo(id);
+// };
 
-export const updateBookService = async (id,data) => {
-    return await updateBookRepo(id,data);
-};
+// export const updateBookService = async (id,data) => {
+//     return await updateBookRepo(id,data);
+// };
 
-export const deleteBookService = async (id) => {
-    return await deleteBookRepo(id);
-};
+// export const deleteBookService = async (id) => {
+//     return await deleteBookRepo(id);
+// };
 
+
+export const createBook = (data) => bookRepo.create(data);
+export const getBooks = () => bookRepo.findAll();
+export const getBookById = (id) => bookRepo.findById(id);
+export const updateBook = (id, data) => bookRepo.update(id, data);
+export const deleteBook = (id) => bookRepo.remove(id);
 
 
 

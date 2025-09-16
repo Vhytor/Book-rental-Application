@@ -3,9 +3,10 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import bookRoutes from "./routes/book.routes.js";
 import authRoutes from "./routes/auth.routes.js";
+import rentalRoutes from "./routes/rental.routes.js";
 
 dotenv.config();
-// console.log("🔍 Loaded MONGO_URI:", process.env.MONGO_URI);
+
 
 
 const app = express();
@@ -57,8 +58,10 @@ app.use((err, req, res, next) => {
 });
 
 //Routes
-app.use("/api/books",bookRoutes);
 app.use("/api/auth",authRoutes);
+app.use("/api/books",bookRoutes);
+app.use("/api/rentals", rentalRoutes);
+
 
 
 //Start Server

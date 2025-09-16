@@ -1,32 +1,33 @@
 import User from "../model/user.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import * as userRepo from "../repositories/user.repository.js";
 
 
 
-export const registerUser = async ({ username, email, password }) => {
-  const existing = await User.findOne({ email });
+export const registerUser = async ({ username, email, password, role = "user" }) => {
+  const existing = await userRepo.findByEmail({ email });
   if (existing) throw new Error("User already exists");
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  const user = new User({ username, email, password: hashedPassword });
-  await user.save();
-  return user;
+  return userRepo.create({
+    username, email, password: hashedPassword,role
+  });
 };
 
 export const loginUser = async ({ email, password }) => {
-  const user = await User.findOne({ email });
+  const user = await userRepo.findByEmail({ email });
   if (!user) throw new Error("Invalid credentials");
 
-  const isMatch = await bcrypt.compare(password, User.password);
+  const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) throw new Error("Invalid credentials");
 
   // Generate JWT
   const token = jwt.sign(
     { id: user._id, email: user.email, role: user.role },
     process.env.JWT_SECRET,
-    { expiresIn: "1h" }
+    { expiresIn: "1d" }
   );
 
   return { token, user };

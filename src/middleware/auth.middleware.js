@@ -1,5 +1,3 @@
-
-
 import jwt from "jsonwebtoken";
 
 export const authMiddleWare = (req, res, next) => {
@@ -14,4 +12,9 @@ export const authMiddleWare = (req, res, next) => {
     }catch(err){
         res.status(401).json({error: "Invalid or expired token"});
     }
+};
+
+export const isAdmin = (req, res, next) => {
+  if (req.user.role !== "admin") return res.status(403).json({ error: "Forbidden" });
+  next();
 };

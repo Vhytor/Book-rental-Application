@@ -20,7 +20,7 @@ const rentalSchema = new mongoose.Schema({
     },
 
 
-});
+},{timestamps: true});
 
 
 export default mongoose.model("Rental",rentalSchema);
