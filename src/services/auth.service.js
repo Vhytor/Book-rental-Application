@@ -6,8 +6,8 @@ import * as userRepo from "../repositories/user.repository.js";
 
 
 export const registerUser = async ({ username, email, password, role = "user" }) => {
-  const existing = await userRepo.findByEmail({ email });
-  if (existing) throw new Error("User already exists");
+  const existing = await userRepo.findByEmail(email);
+  if (existing) throw new Error("User with this email already exists");
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -17,8 +17,8 @@ export const registerUser = async ({ username, email, password, role = "user" })
 };
 
 export const loginUser = async ({ email, password }) => {
-  const user = await userRepo.findByEmail({ email });
-  if (!user) throw new Error("Invalid credentials");
+  const user = await userRepo.findByEmail(email);
+  if (!user) throw new Error("Email not found");
 
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) throw new Error("Invalid credentials");
