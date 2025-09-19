@@ -5,7 +5,7 @@ export const createBookRepo = async (data) => {
     return await bookModel.create(data);
 };
 
-export const getBooksRepo = async () => {
+export const getAllBooks = async () => {
     return await bookModel.find();
 };
 
