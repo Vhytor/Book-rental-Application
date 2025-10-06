@@ -6,8 +6,8 @@ import * as rentalRepo from "../repositories/rental.repository.js";
 export const rentBook = async (userId, bookId) => {
     const book  = await bookRepo.getBookByIdRepo(bookId);
     if(!book) throw new Error("Book not found");
-    if(book.availableCopies < 1) throw new Error("No available copies");
-    // if (!book.available) throw new Error("Book already rented");
+    // if(book.availableCopies < 1) throw new Error("No available copies");
+    if (!book.available) throw new Error("Book already rented");
 
     const rental = await rentalRepo.create({
         user: userId,
@@ -23,15 +23,6 @@ export const rentBook = async (userId, bookId) => {
     });
 
     return rental;
-
-    // book.availableCopies -= 1;
-    // await book.save();
-
-
-    // const existing = await rentalRepo.findByUserAndBook(userId, bookId);
-    // if(existing) throw new Error(" You already rented this book ");
-    
-    // return rentalRepo.create({user: userId, book: bookId});
 
 };
 
