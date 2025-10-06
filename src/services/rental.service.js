@@ -3,34 +3,54 @@ import Book from "../model/book.model.js";
 import * as bookRepo from  "../repositories/book.repository.js";
 import * as rentalRepo from "../repositories/rental.repository.js";
 
-// export const rentBook = async(userId,bookId) => {
-//     const book = await Book.findById(bookId);
-//     if(!book) throw new Error("Book not found");
-
-//     const existing = await Rental.findOne({user: userId,book: bookId, returnAt: null});
-//     if(!existing) throw new Error("This book has already been rented");
-
-//     const rental = await Rental.create({user: userId, book: bookId});
-//     return rental;
-// };
-
 export const rentBook = async (userId, bookId) => {
-    const book  = await bookRepo.findById(bookId);
+    const book  = await bookRepo.getBookByIdRepo(bookId);
     if(!book) throw new Error("Book not found");
+    if(book.availableCopies < 1) throw new Error("No available copies");
+    // if (!book.available) throw new Error("Book already rented");
 
-    const existing = await rentalRepo.findByUserAndBook(userId, bookId);
-    if(existing) throw new Error(" You already rented this book ");
+    const rental = await rentalRepo.create({
+        user: userId,
+        book: bookId,
+        status: "rented",
+
+    });
+
+      // Update the book: mark unavailable + store rentedBy
+    await bookRepo.updateBookRepo(bookId, {
+        available: false,
+        rentedBy: userId,
+    });
+
+    return rental;
+
+    // book.availableCopies -= 1;
+    // await book.save();
+
+
+    // const existing = await rentalRepo.findByUserAndBook(userId, bookId);
+    // if(existing) throw new Error(" You already rented this book ");
     
-    return rentalRepo.create({user: userId, book: bookId});
+    // return rentalRepo.create({user: userId, book: bookId});
 
 };
 
 export const returnBook = async (userId, bookId) => {
     const rental = await rentalRepo.findByUserAndBook(userId, bookId);
-    if(!rental) throw new Error("Rental not found");
+    if(!rental || rental.status === "returned") throw new Error("Rental not found");
 
-    rental.returnedAt = new Date();
+    rental.status = "returned";
+    rental.returnDate = new Date();
     return rentalRepo.save(rental);
+
+    const book = rentalRepo.findById(rental.book);
+    if(!book) throw new Error("Book not found");
+    book.availableCopies += 1;
+    await book.save();
+
+    return rental;
+
+
 
 };
 

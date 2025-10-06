@@ -22,16 +22,17 @@ export const getUserRentals = async (req, res) => {
   try {
     const rentals = await rentalService.getUserRentals(req.user.id);
     res.json(rentals);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
   }
 };
 
 export const getAllRentals = async (req, res) => {
   try {
+    if (req.user.role !== "admin") return res.status(403).json({ error: "Access denied" });
     const rentals = await rentalService.getAllRentals();
     res.json(rentals);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
   }
 };

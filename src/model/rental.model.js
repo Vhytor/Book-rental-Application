@@ -18,6 +18,11 @@ const rentalSchema = new mongoose.Schema({
     returnDate: {
         type: Date,
     },
+    status: {
+        type: String,
+        enum: ["rented" , "returned"],
+        default: "rented",
+    },
 
 
 },{timestamps: true});
