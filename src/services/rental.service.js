@@ -23,26 +23,34 @@ export const rentBook = async (userId, bookId) => {
     });
 
     return rental;
-
 };
 
 export const returnBook = async (userId, bookId) => {
+    const book = await bookRepo.getBookByIdRepo(bookId);
+    if(!book) throw new Error("Book not found");
+
     const rental = await rentalRepo.findByUserAndBook(userId, bookId);
     if(!rental || rental.status === "returned") throw new Error("Rental not found");
 
     rental.status = "returned";
     rental.returnDate = new Date();
-    return rentalRepo.save(rental);
+    await rentalRepo.save(rental);
 
-    const book = rentalRepo.findById(rental.book);
-    if(!book) throw new Error("Book not found");
-    book.availableCopies += 1;
-    await book.save();
+    await bookRepo.updateBookRepo(bookId, {
+        available: true,
+        rentedBy: null,
+
+    });
+
+
+
+
+    // const book = rentalRepo.findById(rental.book);
+    // if(!book) throw new Error("Book not found");
+    // book.availableCopies += 1;
+    // await book.save();
 
     return rental;
-
-
-
 };
 
 export const getUserRentals = (userId) => rentalRepo.findByUser(userId);
