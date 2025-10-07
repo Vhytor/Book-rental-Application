@@ -34,7 +34,7 @@ export const returnBook = async (userId, bookId) => {
 
     rental.status = "returned";
     rental.returnDate = new Date();
-    await rentalRepo.save(rental);
+    await rental.save();
 
     await bookRepo.updateBookRepo(bookId, {
         available: true,
