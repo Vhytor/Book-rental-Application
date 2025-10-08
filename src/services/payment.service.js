@@ -16,4 +16,27 @@ export const initiatePayment = async (user,rentaId,amount) => {
         }
 
     );
-}
+
+    const data = response.data.data;
+
+    await paymentRepo.createPayment({
+        user: user.id,
+        rental: rental.id,
+        amount,
+        reference: data.reference,
+    });
+    return {Authorization: data.authorization_url, reference:data.reference};
+};
+
+export const verifyPayment = async (reference) => {
+    const response = await axios.get(
+        'https://api.paystack.co/transaction/verify/${reference}',
+        {
+            headers: {
+                Authorization: 'Bearer ${process.env.PAYSTACK_SECRET_KEY}',
+            }
+        }
+    );
+    return response.data.data;
+
+};

@@ -4,6 +4,9 @@ import dotenv from "dotenv";
 import bookRoutes from "./routes/book.routes.js";
 import authRoutes from "./routes/auth.routes.js";
 import rentalRoutes from "./routes/rental.routes.js";
+import paymentRoutes from "./routes/payment.routes.js";
+
+
 
 dotenv.config();
 
@@ -61,6 +64,7 @@ app.use((err, req, res, next) => {
 app.use("/api/auth",authRoutes);
 app.use("/api/books",bookRoutes);
 app.use("/api/rentals", rentalRoutes);
+app.use("/api/payments", paymentRoutes);
 
 
 
