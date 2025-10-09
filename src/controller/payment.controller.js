@@ -1,7 +1,9 @@
+import * as paymentService from "../services/payment.service.js";
+import * as paymentRepo from "../repositories/payment.repository.js";
 
 
 
-export const initiatePayment = async (  res, req) => {
+export const initiatePayment = async (  req, res) => {
     try{
         const {rentalId , amount} = req.body;
         const user = req.user;
