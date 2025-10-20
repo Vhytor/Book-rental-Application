@@ -33,3 +33,22 @@ export const loginUser = async ({ email, password }) => {
 
   return { token, user };
 };
+
+export const changePassword = async (userId,{ oldPassword, newPassword }) => {
+  const user = await userRepo.findById(userId);
+  if (!user) throw new Error("User not found");
+
+  // Check if old password matches
+  const isMatch = await bcrypt.compare(oldPassword, user.password);
+  if (!isMatch) throw new Error("Old password does not match");
+
+  // Hash the new password
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+  // user.password = hashedPassword;
+  // await user.save();
+
+  await userRepo.updatePassword(userId, hashedPassword);
+
+  return { message: "Password changed successfully" };
+};
