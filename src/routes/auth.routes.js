@@ -1,5 +1,6 @@
 import express from "express";
 import { register, login } from "../controller/auth.controller.js";
+import { authMiddleWare } from "../middleware/auth.middleware.js";
 import { createBook, getBookById, getBooks } from "../controller/book.controller.js";
 
 const router = express.Router();
@@ -80,5 +81,7 @@ router.post("/test-bcrypt", async (req, res) => {
 
 router.post("/register", register);
 router.post("/login", login);
+
+router.put("/change-password",authMiddleWare, changePassword);
 
 export default router;

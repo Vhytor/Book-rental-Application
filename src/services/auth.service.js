@@ -5,14 +5,15 @@ import * as userRepo from "../repositories/user.repository.js";
 
 
 
-export const registerUser = async ({ username, email, password, role = "user" }) => {
+export const registerUser = async ({ username, first_name, last_name, email, password, role = "user" }) => {
   const existing = await userRepo.findByEmail(email);
   if (existing) throw new Error("User with this email already exists");
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
   return userRepo.create({
-    username, email, password: hashedPassword,role
+    username,first_name,last_name, email, password: hashedPassword,role
+
   });
 };
 
