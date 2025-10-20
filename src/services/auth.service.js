@@ -22,7 +22,7 @@ export const loginUser = async ({ email, password }) => {
   if (!user) throw new Error("Email not found");
 
   const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) throw new Error("Invalid credentials");
+  if (!isMatch) throw new Error("Wrong Password");
 
   // Generate JWT
   const token = jwt.sign(
