@@ -1,5 +1,5 @@
 import express from "express";
-import { register, login, changePassword } from "../controller/auth.controller.js";
+import { register, login, changePassword, forgotPassword, resetPassword } from "../controller/auth.controller.js";
 import { authMiddleWare } from "../middleware/auth.middleware.js";
 import { createBook, getBookById, getBooks } from "../controller/book.controller.js";
 
@@ -81,6 +81,8 @@ router.post("/test-bcrypt", async (req, res) => {
 
 router.post("/register", register);
 router.post("/login", login);
+router.post("/forgot-password", forgotPassword);
+router.post("/reset-password", resetPassword);
 
 router.put("/change-password",authMiddleWare, changePassword);
 

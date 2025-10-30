@@ -2,6 +2,8 @@ import User from "../model/user.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import * as userRepo from "../repositories/user.repository.js";
+import { sendResetEmail } from "../services/email.service.js";
+
 
 
 
@@ -51,4 +53,34 @@ export const changePassword = async (userId,{ oldPassword, newPassword }) => {
   await userRepo.updatePassword(userId, hashedPassword);
 
   return { message: "Password changed successfully" };
+};
+
+export const forgotPassword = async (email) => {
+  const user = await userRepo.findByEmail(email);
+  if (!user) throw new Error("User with this email not found");
+
+  const resetToken = jwt.sign(
+    {id: user._id},
+    process.env.JWT_SECRET,
+    {expiresIn: "15m"}
+  );
+  await sendResetEmail(user.email, resetToken);
+  return { message: "Password reset email sent" };
+
+};
+
+export const resetPassword = async (token, newPassword) => {
+  try{
+    const decoded = jwt.verify(token,process.env.JWT_SECRET);
+    const user = await userRepo.findById(decoded.id);
+    if(!user) throw new Error("Invalid or expired token");
+
+    const hashed = await bcrypt.hash(newPassword,10);
+    await userRepo.updatePassword(user._id, hashed);
+    return { message: "Password reset successfully" };
+  }catch(error){
+    throw new Error("Invalid or expired token");
+
+  }
+
 };

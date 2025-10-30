@@ -36,3 +36,25 @@ export const changePassword = async (req,res) => {
     res.status(500).json({error: err.message});
   }
 };
+
+export const forgotPassword = async (req, res) => {
+  try{
+    const{email} = req.body;
+    const result = await authService.forgotPassword(email);
+    res.json(result);
+  }catch(error){
+    res.status(400).json({error: error.message});
+  }
+
+};
+
+export const resetPassword = async (req, res) => {
+  try{
+    const {token, newPassword} = req.body;
+    const result = await authService.resetPassword(token, newPassword);
+    res.json(result);
+  }catch(error){
+    res.status(400).json({error: error.message});
+
+  }
+};
